@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TravelBot — AI Travel Planner | IBM Granite</title>
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+
+<!-- ========== HEADER ========== -->
+<header class="header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <span class="brand-icon">✈️</span>
+      <div>
+        <h1 class="brand-title">TravelBot</h1>
+        <span class="brand-sub">Powered by IBM Granite · watsonx.ai</span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div class="status-indicator" id="statusDot">
+        <span class="dot dot--loading"></span>
+        <span class="status-text" id="statusText">Connecting…</span>
+      </div>
+      <button class="btn btn--ghost" id="resetBtn" title="New conversation">🔄 New Chat</button>
+    </div>
+  </div>
+</header>
+
+<!-- ========== MAIN LAYOUT ========== -->
+<div class="layout">
+
+  <!-- ---- SIDEBAR ---- -->
+  <aside class="sidebar">
+    <h3 class="sidebar-heading">Quick Prompts</h3>
+    <div class="quick-prompts" id="quickPrompts">
+      <div class="prompt-skeleton"></div>
+      <div class="prompt-skeleton"></div>
+      <div class="prompt-skeleton"></div>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <h3 class="sidebar-heading">Plan Your Trip</h3>
+    <div class="trip-form">
+      <label class="form-label">Destination</label>
+      <input class="form-input" type="text" id="tripDestination" placeholder="e.g. Goa, Bali, Paris" />
+
+      <label class="form-label">Duration (days)</label>
+      <input class="form-input" type="number" id="tripDuration" placeholder="7" min="1" max="30" />
+
+      <label class="form-label">Budget</label>
+      <select class="form-input" id="tripBudget">
+        <option value="">Select budget</option>
+        <option value="low">🎒 Budget / Backpacker</option>
+        <option value="medium">💼 Mid-Range</option>
+        <option value="high">💎 Luxury</option>
+      </select>
+
+      <label class="form-label">Interests</label>
+      <select class="form-input" id="tripInterest">
+        <option value="">Select interest</option>
+        <option value="beach">🏖️ Beach & Relaxation</option>
+        <option value="cultural">🏛️ Cultural & Heritage</option>
+        <option value="adventure">🏔️ Adventure & Sports</option>
+        <option value="city">🏙️ City Explorer</option>
+        <option value="nature">🌿 Nature & Wildlife</option>
+      </select>
+
+      <button class="btn btn--primary btn--full" id="planTripBtn">🗺️ Plan My Trip</button>
+    </div>
+
+    <div class="sidebar-divider"></div>
+    <div class="ibm-badge">
+      <span class="ibm-badge-icon">🤖</span>
+      <div>
+        <strong>IBM Granite</strong>
+        <span>granite-13b-chat-v2</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ---- CHAT AREA ---- -->
+  <main class="chat-area">
+    <div class="messages" id="messages">
+      <!-- Welcome message injected by JS -->
+    </div>
+
+    <!-- Typing indicator -->
+    <div class="typing-indicator" id="typingIndicator" style="display:none">
+      <div class="typing-bubble">
+        <span></span><span></span><span></span>
+      </div>
+      <span class="typing-text">TravelBot is thinking…</span>
+    </div>
+
+    <!-- Input bar -->
+    <div class="input-bar">
+      <textarea
+        class="input-textarea"
+        id="userInput"
+        placeholder="Ask me anything about your trip… e.g. 'Plan a 5-day beach vacation under $50/day'"
+        rows="1"
+      ></textarea>
+      <button class="btn btn--send" id="sendBtn" title="Send">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+      </button>
+    </div>
+  </main>
+
+</div>
+
+<script src="/static/js/app.js"></script>
+</body>
+</html>
