@@ -1,0 +1,32 @@
+# ============================================================
+#  Travel Planner Agent - Python Dependencies
+# ============================================================
+
+# Streamlit UI (primary interface) — use whatever is already installed
+streamlit>=1.35.0
+
+# Web Framework (Flask kept for optional REST API / app.py)
+flask>=3.0.3
+flask-cors>=4.0.1
+
+# IBM watsonx.ai SDK (IBM Granite)
+ibm-watsonx-ai>=1.1.0
+
+# IBM Cloud Services
+ibm-cloud-sdk-core>=3.21.0
+ibm-watson>=8.1.0
+
+# Environment & Config
+python-dotenv>=1.0.0
+
+# HTTP Requests
+requests>=2.28.0
+
+# Data Processing
+python-dateutil>=2.8.0
+
+# JSON handling
+jsonschema>=4.18.0
+
+# Utilities
+colorama>=0.4.6
