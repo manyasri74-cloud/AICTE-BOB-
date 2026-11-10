@@ -5,6 +5,11 @@ Travel Planner Agent — IBM Granite Model Client
 Uses ibm-watsonx-ai SDK with the /ml/v1/text/chat endpoint.
 Handles IBM Lite 429 rate limits with automatic exponential-backoff retry.
 Confirmed working model for IBM Lite us-south: ibm/granite-4-h-small
+
+Secrets priority:
+  1. st.secrets (Streamlit Community Cloud)
+  2. .env file (local development)
+  3. environment variables
 """
 
 import os
@@ -12,7 +17,25 @@ import time
 import threading
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv()  # no-op on Streamlit Cloud, loads .env locally
+
+def _get_secret(key: str, default: str = "") -> str:
+    """
+    Read a secret from st.secrets (Streamlit Cloud) or fall back to os.getenv.
+    Supports flat keys (WATSONX_API_KEY) and sectioned keys ([ibm] WATSONX_API_KEY).
+    """
+    try:
+        import streamlit as st
+        # Try flat key first
+        if key in st.secrets:
+            return str(st.secrets[key])
+        # Try sectioned keys
+        for section in ("ibm", "app", "weather"):
+            if section in st.secrets and key in st.secrets[section]:
+                return str(st.secrets[section][key])
+    except Exception:
+        pass
+    return os.getenv(key, default)
 
 try:
     from ibm_watsonx_ai import Credentials
@@ -42,13 +65,13 @@ class IBMGraniteClient:
     TOKEN_URL = "https://iam.cloud.ibm.com/identity/token"
 
     def __init__(self):
-        self.api_key     = os.getenv("WATSONX_API_KEY")
-        self.project_id  = os.getenv("WATSONX_PROJECT_ID")
-        self.watsonx_url = os.getenv("WATSONX_URL", "https://us-south.ml.cloud.ibm.com")
-        self.model_id    = os.getenv("GRANITE_MODEL_ID", "ibm/granite-4-h-small")
-        self.max_tokens  = int(os.getenv("MAX_TOKENS", "1024"))
-        self.temperature = float(os.getenv("TEMPERATURE", "0.7"))
-        self.top_p       = float(os.getenv("TOP_P", "0.9"))
+        self.api_key     = _get_secret("WATSONX_API_KEY")
+        self.project_id  = _get_secret("WATSONX_PROJECT_ID")
+        self.watsonx_url = _get_secret("WATSONX_URL", "https://us-south.ml.cloud.ibm.com")
+        self.model_id    = _get_secret("GRANITE_MODEL_ID", "ibm/granite-4-h-small")
+        self.max_tokens  = int(_get_secret("MAX_TOKENS", "1024"))
+        self.temperature = float(_get_secret("TEMPERATURE", "0.7"))
+        self.top_p       = float(_get_secret("TOP_P", "0.9"))
         self._sdk_model  = None
 
     # ── SDK ModelInference (chat endpoint) ───────────────────
@@ -162,7 +185,7 @@ class WeatherClient:
     BASE_URL = "https://api.openweathermap.org/data/2.5"
 
     def __init__(self):
-        self.api_key = os.getenv("OPENWEATHER_API_KEY")
+        self.api_key = _get_secret("OPENWEATHER_API_KEY")
 
     def get_weather(self, city: str) -> dict:
         """Get current weather for a city."""
